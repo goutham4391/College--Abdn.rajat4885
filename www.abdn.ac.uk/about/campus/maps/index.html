@@ -1,0 +1,1018 @@
+<!doctype html>
+<html lang="en-GB" dir="ltr">
+    
+<!-- Mirrored from www.abdn.ac.uk/about/campus/maps/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 27 Oct 2022 12:45:51 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="utf-8">
+    <title>Campus Maps | About | The University of Aberdeen</title>
+    <!-- Page ID : 532 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A selection of interactive campus maps covering Old Aberdeen, Foresterhill and the surrounding area">
+        <link rel="apple-touch-icon" sizes="180x180" href="../../../global/images/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../../global/images/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../../global/images/icons/favicon-16x16.png">
+    <link rel="manifest" href="../../../global/images/icons/manifest.json">
+    <link rel="mask-icon" href="../../../global/images/icons/safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="msapplication-config" content="../../../global/images/icons/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+    
+        <link rel="stylesheet" href="../../../global/css/opentext_responsive/global435c.css?cb=20221026">
+            <!--[if lte IE 8]>
+        <link rel="stylesheet" href="/global/css/opentext_responsive/ie_lte8.css?cb=20221026" media="screen">
+    <![endif]-->
+    <link rel="stylesheet" href="../../../global/css/opentext_responsive/funnelback_search435c.css?cb=20221026" media="screen">
+    <link rel="stylesheet" href="../../../../uoab-search.squiz.cloud/s/resources-global/css/funnelback.autocompletion-2.6.0.css" media="screen">
+    
+                    <link rel="stylesheet" href="../../../global/maps/site/css/opentext_responsive/maps.css" media="screen">
+                        <link rel="stylesheet" href="../../../global/css/opentext_responsive/print435c.css?cb=20221026" media="print">
+        <!--[if lte IE 8]>
+        <script>
+            var els = ['article', 'aside', 'details', 'figcaption', 'figure', 'footer', 'header', 'hgroup', 'main', 'nav', 'section', 'summary', 'picture'];
+            for (var i = 0; i < els.length; i ++) {
+                document.createElement(els[i]);
+            }
+        </script>
+    <![endif]-->
+    <script src="../../../../code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="../../../global/js/priorityplus_navigation.js"></script>
+    <!--[if IE 6]>
+        <script src="/global/js/ie.js"></script>
+    <![endif]-->
+    <script>window.MSInputMethodContext && document.documentMode && document.write('<script src="../../../global/js/ie11CustomProperties.min.js"><\/script>');</script>
+    
+<script>
+    var global_base_url = '../../../global/index.html';
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAGSGR9lD2bMICiugveQaAuGpfBZ27S9go"></script>
+<script>
+    var directionsDisplay;
+    var directionsService = new google.maps.DirectionsService();
+    var map;
+    var myLatlng;
+    var markers = [];
+
+    function initialize() {
+        directionsDisplay = new google.maps.DirectionsRenderer();
+        
+            myLatlng = new google.maps.LatLng(57.155982, -2.112465);
+                    var myOptions = {
+            zoom: 13,
+            center: myLatlng,
+            draggableCursor: 'default',
+            draggingCursor: 'move',
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+
+        var map = new google.maps.Map(document.getElementById('map_container'), myOptions);
+        var infowindow = new google.maps.InfoWindow();
+
+        directionsDisplay.setMap(map);
+            }
+
+    // function to set cookie
+    function setCookie(c_name, value, exdays) {
+        // keep the cookie for 30 minutes
+        var dt = new Date(),
+            expiryTime = dt.setTime(dt.getTime() + 1800000);
+
+        var c_value = escape(value) + ((exdays == null) ? '' : '; expires = ' + dt.toGMTString()) + ';path=/;domain=.abdn.ac.uk';
+        document.cookie = c_name + '=' + c_value;
+    }
+
+    function deleteCookie(name) {
+        if (getCookie('abdn_maps')) {
+            var c_value = '""; expires = -1; path = /; domain = .abdn.ac.uk';
+            document.cookie = name + '=' + c_value;
+        }
+    }
+
+    function getCookie(name) {
+        var value = '; ' + document.cookie;
+        var parts = value.split('; ' + name + '=');
+        if (parts.length == 2) return parts.pop().split(';').shift();
+    }
+
+    // prompt for permission to capture user geolocation
+    function getMyLocation(and_then) {
+        navigator.geolocation.getCurrentPosition(
+            function(pos) {
+                /**
+                 * pos object contains
+                 *      pos.coords.latitude
+                 *      pos.coords.longitude
+                 *      pos.coords.accuracy
+                 */
+
+                // stick it in a cookie
+                deleteCookie('abdn_maps');
+                setCookie('abdn_maps', pos.coords.latitude + '_' + pos.coords.longitude, 0.0694)
+
+                if (and_then) {
+                    if (and_then == 'refresh') {
+                        window.location = 'whereami.html';
+                    }
+
+                    if (and_then == 'atob') {
+                        getDirections(pos.coords.latitude, pos.coords.longitude);
+                    }
+                }
+            },
+            function(error) {
+                alert('Cannot establish your current location - some features may be missing!');
+            }, {
+                maximumAge: 10000,
+                timeout: 10000
+            }
+        );
+    }
+
+    function fromWhere() {
+        // give an indication of a process by spinning a gif
+        // document.getElementById('map_please_wait').className = '';
+        // document.getElementById('map_get_directions').className = 'offscreen';
+
+        // does the cookie have coords?
+        var cookie_coords = getCookie('abdn_maps');
+        if (cookie_coords) {
+            cookie_coords_bits = cookie_coords.split('_');
+            getDirections(cookie_coords_bits[0], cookie_coords_bits[1]);
+        } else {
+            getMyLocation('atob');
+        }
+
+        return true;
+    }
+
+    function getDirections(the_lat, the_long) {
+        var user_pos = new google.maps.LatLng(the_lat, the_long);
+
+        var request = {
+            origin: user_pos,
+            destination: myLatlng,
+            travelMode: google.maps.TravelMode.WALKING,
+            unitSystem: google.maps.UnitSystem.IMPERIAL
+        };
+
+        directionsService.route(request, function(result, status) {
+            if (status == google.maps.DirectionsStatus.OK) {
+                directionsDisplay.setDirections(result);
+
+                // also do distance calculation
+                calculateDistances(user_pos, myLatlng);
+            }
+        });
+    }
+
+    function restoreButton() {
+        // restore button
+        document.getElementById('map_please_wait').className = 'offscreen';
+        document.getElementById('map_get_directions').className = 'button';
+    }
+
+    function makeInfoWindowEvent(map, infowindow, contentString, marker) {
+        var the_content = '<div class="map_info_window">' + contentString + '</div>';
+        google.maps.event.addListener(marker, 'click', function() {
+            infowindow.setContent(the_content);
+            infowindow.open(map, marker);
+        });
+    }
+
+    function addMarker(building_id, name, lat, lng, map, infowindow, the_description, the_marker_text) {
+        markers.push(name);
+
+        if (!the_marker_text) {
+            the_marker_text = '';
+        }
+
+        marker = new google.maps.Marker({
+            position: new google.maps.LatLng(lat, lng),
+            map: map,
+            icon: 'https://chart.googleapis.com/chart?chst=d_map_spin&chld=0.5|0|FF776B|12|b|' + the_marker_text
+        });
+
+        var the_info_content = '<b>' + name + '</b><br><br>';
+
+        if (the_description) {
+            the_info_content += the_description + '<br><br>';
+        }
+
+        the_info_content += '<a href="/about/campus/maps/view/' + building_id + '/">Show Details</a>';
+
+        makeInfoWindowEvent(map, infowindow, the_info_content, marker);
+    }
+
+    function calculateDistances(latlong_from, latlong_to) {
+        var service = new google.maps.DistanceMatrixService();
+        service.getDistanceMatrix({
+            origins: [latlong_from],
+            destinations: [latlong_to],
+            travelMode: google.maps.TravelMode.WALKING,
+            unitSystem: google.maps.UnitSystem.IMPERIAL
+        }, displayDistance);
+    }
+
+    function displayDistance(response, status) {
+        if (status != google.maps.DistanceMatrixStatus.OK) {
+            alert('Error was: ' + status);
+        } else {
+            var origins = response.originAddresses;
+            var destinations = response.destinationAddresses;
+            var output_div = document.getElementById('map_metrics_info');
+            output_div.innerHTML = '';
+
+            for (var i = 0; i < origins.length; i++) {
+                var results = response.rows[i].elements;
+
+                for (var j = 0; j < results.length; j++) {
+                    // ensure the unit says "miles" not "mi"
+                    var distance_text = results[j].distance.text.replace(' mi', ' miles');
+
+                    output_div.innerHTML += '<p>' + distance_text + ' in ' +
+                        results[j].duration.text + ' (walking)</p>';
+                }
+            }
+
+            output_div.style.display = 'block';
+        }
+    }
+</script>
+</head>
+    <body class="no_js">
+        <script>
+            document.getElementsByTagName('body')[0].className = '';
+        </script>
+        
+    <header id="top">
+        <ul class="skip_links">
+            <li><a href="#main">Skip to content</a></li>
+            <li><a href="../../our-website/accessibility.html">About Accessibility on our website</a></li>
+        </ul>
+        <div id="modal_fade"></div>
+    <div class="global_header_wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="global_header">
+                    <div class="clearfix">
+                        <div class="uni_logo">
+                            
+                          <a href="../../../index.html">
+                              <img src="../../../global/images/layout/UoA_Primary_Logo_RGB_2018435c.png?cb=20221026" srcset="/global/images/layout/UoA_Primary_Logo_RGB_2018.svg?cb=20221026" alt="University of Aberdeen" style="width: 300px">
+                          </a>
+                                                  </div>
+                        <nav id="uni_menu" class="uni_menu no_js row" aria-label="University of Aberdeen Navigation">
+    <ul>
+        <li>
+            <a href="../../../study/index.html">Study</a>
+            <ul class="uni_menu_wide uni_menu_4col col">
+                <li>
+                    <b><a href="../../../study/undergraduate/index.html">Undergraduate</a></b>
+                    <ul>
+                        <li><a href="../../../study/undergraduate/degree-programmes/index.html">Undergraduate Degrees</a></li>
+                        <li><a href="../../../study/undergraduate/subject-areas/index.html">Subject Areas</a></li>
+                        <li><a href="../../../study/undergraduate/study-abroad-and-exchanges.html">Go Abroad</a></li>
+                        <li><a href="../../../study/undergraduate/finance.html">Finance and Funding</a></li>
+                        <li><a href="../../../study/undergraduate/how-to-apply.html">How to Apply</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <b><a href="../../../study/postgraduate-taught/index.html">Postgraduate Taught</a></b>
+                    <ul>
+                        <li><a href="../../../study/postgraduate-taught/degree-programmes/index.html">Postgraduate Degrees</a></li>
+                        <li><a href="../../../study/online/index.html">Online Degrees</a></li>
+                        <li><a href="../../../study/postgraduate-taught/part-time.html">Part-time Study</a></li>
+                        <li><a href="../../../study/postgraduate-taught/finance-funding-1599.html">Finance and Funding</a></li>
+                        <li><a href="../../../study/postgraduate-taught/apply.html">How to Apply</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <b><a href="../../../study/postgraduate-research/index.html">Postgraduate Research</a></b>
+                    <ul>
+                        <li><a href="../../../study/postgraduate-research/research-areas/index.html">Research Areas</a></li>
+                        <li><a href="../../../study/postgraduate-research/current-phd-opportunities-1640.html">PhD Opportunities</a></li>
+                        <li><a href="../../../study/postgraduate-research/finance-funding-1641.html">Finance and Funding</a></li>
+                        <li><a href="../../../study/postgraduate-research/how-to-apply-1639.html">How to Apply</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <b><a href="../../../study/online/index.html">Online Learning</a></b>
+                    <ul>
+                        <li><a href="../../../study/online/degrees.html">Online Degrees</a></li>
+                        <li><a href="https://on.abdn.ac.uk/courses/">Short Courses</a></li>
+                        <li><a href="https://on.abdn.ac.uk/categories/">Study Subjects</a></li>
+                        <li><a href="https://on.abdn.ac.uk/how-online-learning-works/">How Online Learning Works</a></li>
+                        <li><a href="https://on.abdn.ac.uk/discover/fees-funding-and-discounts/">Fees and Funding</a></li>
+                        <li class="uni_menu_close">
+                            <a href="#">
+                                Close <i class="fa fa-times" aria-hidden="true"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="../../index.html">About</a>
+            <ul class="uni_menu_wide uni_menu_4col col">
+                <li>
+                    <ul>
+                        <li><a href="../index.html">Campus</a></li>
+                        <li><a href="index.html">Maps and Directions</a></li>
+                        <li><a href="../../../people/index.html">Staff Directory</a></li>
+                        <li><a href="../../contact/index.html">Contact Information</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <ul>
+                        <li><a href="../../../news/index.html">News</a></li>
+                        <li><a href="../../../events/index.html">Events</a></li>
+                        <li><a href="../../history/index.html">History</a></li>
+                        <li><a href="../../facts-figures/index.html">Facts &amp; Figures</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <ul>
+                        <li><a href="../../colleges-schools-institutes/index.html">Schools and Institutes</a></li>
+                        <li><a href="../../strategy-and-governance/index.html">Strategy and Governance</a></li>
+                        <li><a href="../../management/index.html">Management</a></li>
+                        <li><a href="../../coronavirus/index.html">Coronavirus (Covid-19)</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <ul>
+                        <li class="menu_img menu_img_about"></li>
+                        <li class="uni_menu_close">
+                            <a href="#">
+                                Close <i class="fa fa-times" aria-hidden="true"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="../../../research/index.html">Research</a>
+            <ul class="uni_menu_wide uni_menu_4col col">
+                <li>
+                    <ul>
+                        <li><a href="../../../research/explore/index.html">Explore our Research</a></li>
+                        <li><a href="../../../research/impact/index.html">Impact</a></li>
+                        <li><a href="../../../research/institutes-centres/index.html">Find a Centre or Institute</a></li>
+                        <li><a href="../../../research/facilities/index.html">Facilities</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <ul>
+                        <li><a href="../../../study/postgraduate-research/index.html">Postgraduate Research Study</a></li>
+                        <li><a href="../../../research/jobs/index.html">Research Jobs</a></li>
+                        <li><a href="../../../research/support/index.html">Research Support</a></li>
+                    </ul>
+                </li>
+                <li class="uni_menu_2col col_img_right">
+                    <ul>
+                        <li class="menu_img menu_img_research"></li>
+                        <li class="uni_menu_close">
+                            <a href="#">
+                                Close <i class="fa fa-times" aria-hidden="true"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="../../../alumni/index.html">Alumni &amp; Giving</a>
+            <ul class="uni_menu_wide uni_menu_4col col">
+                <li class="uni_menu_2col">
+                    <ul>
+                        <li class="menu_img menu_img_alumni"></li>
+                    </ul>
+                <li>
+                <li>
+                    <b><a href="../../../alumni/index.html">Alumni</a></b>
+                    <ul>
+                        <li><a href="../../../alumni/connected/index.html">Stay in Touch</a></li>
+                        <li><a href="../../../alumni/involved/index.html">Get Involved</a></li>
+                        <li><a href="../../../alumni/benefits-services/index.html">Benefits and Services</a></li>
+                        <li><a href="https://www.abdnalumni.org/">Alumni Hub</a></li>
+                        <li><a href="../../../alumni/events-reunions.html">Events and Reunions</a></li>
+                        <li><a href="../../../alumni/our-alumni/index.html">Our Alumni</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <b><a href="../../../giving/index.html">Development Trust</a></b>
+                    <ul>
+                        <li><a href="../../../giving/difference/index.html">Make a Difference</a></li>
+                        <li><a href="../../../giving/talk/index.html">Apply for Funding</a></li>
+                        <li><a href="../../../giving/giving/index.html">Giving</a></li>
+                        <li class="uni_menu_close">
+                            <a href="#">
+                                Close <i class="fa fa-times" aria-hidden="true"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="../../../business-info/index.html">Business</a>
+            <ul class="uni_menu_wide uni_menu_4col col">
+                <li class="uni_menu_2col">
+                    <ul>
+                        <li class="menu_img menu_img_business"></li>
+                        <li class="uni_menu_close">
+                            <a href="#">
+                                Close <i class="fa fa-times" aria-hidden="true"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <ul>
+                        <li><a href="../../../business-info/training/index.html">Development and Training</a></li>
+                        <li><a href="../../../business-info/facilities-and-expertise/index.html">Facilities and Expertise</a></li>
+                        <li><a href="../../../business-info/working-with-students/index.html">Working with Students</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <ul>
+                        <li><a href="../../../business-info/collaborative-research/index.html">Collaboration</a></li>
+                        <li><a href="../../../business-info/funding/index.html">Funding</a></li>
+                        <li><a href="../../../business-info/business-contacts/index.html">Business Contacts</a></li>
+                        <li class="uni_menu_close">
+                            <a href="#">
+                                Close <i class="fa fa-times" aria-hidden="true"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="../../quick-links.html">Quick Links</a>
+            <ul class="uni_menu_wide uni_menu_4col col">
+                <li>
+                    <b><a href="../../../students/index.html">Student Resources</a></b>
+                    <ul>
+                        <li><a href="../../../students/academic-life/mytimetable-3376.html">MyTimetable</a></li>
+                        <li><a href="../../../students/academic-life/mycurriculum-3375.html">MyCurriculum</a></li>
+                        <li><a href="https://abdn.blackboard.com/">MyAberdeen</a></li>
+                        <li><a href="../../../studenthub/index.html">Student Hub</a></li>
+                        <li><a href="https://www.outlook.com/abdn.ac.uk">Student Email</a></li>
+                        <li><a href="../../../students/student-channel/index.html">Student Channel</a></li>
+                        <li class="uni_menu_text_box">
+                            <strong>Infohub Opening Hours <i class="fa fa-clock-o" aria-hidden="true"></i></strong>
+                            <dl class="clearfix">
+                                <dt>Mon - Thu</dt>
+                                <dd>09:00 - 17:00</dd>
+                                <dt>Fri</dt>
+                                <dd>10:00 - 17:00</dd>
+                                <dt>Sat - Sun</dt>
+                                <dd>Closed</dd>
+                            </dl>
+                            Email: <a href="mailto:infohub@abdn.ac.uk">infohub@abdn.ac.uk</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <b><a href="../../../staffnet/index.html">StaffNet</a></b>
+                    <ul>
+                        <li><a href="../../../staffnet/working-here/index.html">Working Here</a></li>
+                        <li><a href="../../../staffnet/secure/management-information-systems-1428.html">Management Information Systems</a></li>
+                        <li><a href="../../../staffnet/teaching/index.html">Teaching &amp; Learning</a></li>
+                        <li><a href="../../../staffnet/governance/index.html">Policy &amp; Governance</a></li>
+                        <li><a href="https://www.outlook.com/abdn.ac.uk">Staff Email</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <b>Our Website</b>
+                    <ul>
+                        <li><a href="../../../study/index.html">Study</a></li>
+                        <li><a href="../../index.html">About</a></li>
+                        <li><a href="../../../research/index.html">Research</a></li>
+                        <li><a href="../../../alumni/index.html">Alumni &amp; Giving</a></li>
+                        <li><a href="../../../business-info/index.html">Business</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <b>Popular</b>
+                    <ul>
+                        <li><a href="../../../students/index.html">For Students</a></li>
+                        <li><a href="../../../staffnet/index.html">For Staff</a></li>
+                        <li><a href="https://www.store.abdn.ac.uk/">Online Store</a></li>
+                        <li><a href="../../../epayments/index.html">ePayments</a></li>
+                        <li><a href="../../../jobs/index.html">Jobs</a></li>
+                        <li><a href="../../../library/index.html">Library</a></li>
+                        <li><a href="../../../people/index.html">Staff Directory</a></li>
+                        <li><a href="../../../it/index.html">IT Services</a></li>
+                        <li><a href="../../our-website/atoz.html">A to Z</a></li>
+                        <li class="uni_menu_close">
+                            <a href="#">
+                                Close <i class="fa fa-times" aria-hidden="true"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</nav>
+<div class="toggle_controls">
+    <a href="../../../search/index.html" id="uni_search_toggle" class="uni_search_toggle no_js">
+        <i class="fa fa-search" aria-hidden="true"></i>
+        <span>Search</span>
+    </a>
+    <a href="#section_nav" class="uni_menu_toggle uni_menu_show_mobile_only">
+        <i class="fa fa-navicon" aria-hidden="true"></i>
+        <span>Menu</span>
+    </a>
+</div>
+<form id="global_search" method="get" role="search" action="https://www.abdn.ac.uk/search/results.php" aria-label="Search the University of Aberdeen website">
+    <fieldset>
+        <legend>Search Our Website</legend>
+        
+            <label for="within" class="offscreen">Search In</label>
+            <select id="within" name="within">
+                <option value="abdn">University Website</option>
+                <option value="dir">Staff Directory</option>
+                <option value="lib">Library Collections</option>
+            </select>
+                    <label for="query">Keywords</label>
+        <input type="search" id="query" name="query" placeholder="Search" value="">
+                <button type="submit">
+            <i class="fa fa-search" aria-hidden="true"></i>
+            <b>Search</b>
+        </button>
+    </fieldset>
+    <p>Or Browse:</p>
+    <ul>
+        <li><a href="../../contact/index.html">Contacts</a></li>
+        <li><a href="../../our-website/atoz.html" style="speak-as: spell-out;">A to Z</a></li>
+        <li><a href="../../../people/index.html">Staff Directory</a></li>
+    </ul>
+</form>
+<script>
+    document.getElementById('global_search').className += ' collapsed';
+</script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+      <div id="section_heading">
+        <div class="container">
+          <div class="row">
+            <div class="col">
+                <a href="../../index.html" class="section_head_text">
+                    About                </a>
+                            </div>
+          </div>
+        </div>
+      </div>
+    <nav id="section_top_level" class="section_top_level_wrapper" aria-label="About navigation">
+    <div class="container">
+
+    <ul class="top_level">
+    
+            <li>
+                <a href="../../schools-institutes/index.html">Schools and Institutes</a>
+            </li>
+            
+            <li>
+                <a href="../index-2.html" class="current">Campus</a>
+            </li>
+            
+            <li>
+                <a href="../../strategy-and-governance/index-2.html">Strategy and Governance</a>
+            </li>
+            
+            <li>
+                <a href="../../management/index-2.html">Management</a>
+            </li>
+            
+            <li>
+                <a href="../../facts-figures/index-2.html">Facts & Figures</a>
+            </li>
+            
+            <li>
+                <a href="../../history/index-2.html">History</a>
+            </li>
+            
+            <li>
+                <a href="../../contact/index-2.html">Contact</a>
+            </li>
+            
+            <li>
+                <a href="../../partnerships/index.html">Partnerships</a>
+            </li>
+            
+            <li>
+                <a href="../../coronavirus/index-2.html">Coronavirus (Covid-19)</a>
+            </li>
+            
+    </ul>
+        </div>
+</nav>
+<script>
+    try {
+        document.addEventListener('DOMContentLoaded', function(){
+            priorityPlusList = new PriorityPlusList({
+                selector: '#section_top_level ul',
+                moreButtonContent: '<a href="#">More</a>'
+            });
+        })
+    }
+    catch (e) {
+        if (typeof console !== 'undefined' && typeof console.log !== 'undefined') {
+            console.log('PriorityPlusList does not offer support for your current browser');
+        }
+    }
+</script>
+
+    <h1 class="offscreen">Campus Maps</h1>
+    
+    <div class="breadcrumb_wrapper">
+        <div class="container"><div class="breadcrumb" role="navigation" aria-label="Breadcrumb">
+    <ol>
+        
+            <li><a href="../../../index.html">University Home</a></li>
+            
+            <li><a href="../../index.html">About</a></li>
+            
+            <li><a href="../index-2.html">Campus</a></li>
+            
+            <li tabindex="0" aria-current="page">Maps</li>
+                </ol>
+</div>
+
+        </div>
+    </div><style>
+@media screen and (min-width: 1200px) {
+    .hero_header.has_full_image {
+        background-image: url('../../../img/2000x/about/feature-images/aerial%2032-9.jpg');
+    }
+}
+</style>
+
+<div class="hero_header theme_dark_blue  has_full_image">
+    <div class="hero_header_inner">
+                <div class="hero_header_image_area" style="background-image: url('../../../img/1200x/about/feature-images/aerial%2016-9.jpg')"></div>
+        
+        <div class="hero_header_text_area">
+            <div class="hero_container">
+
+                
+                <h2>Campus</h2>
+                <p>Our campuses bring together the ancient and the modern, providing the perfect setting for research and learning</p>
+                                <div class="btn-group">
+                                        </div>
+                            </div>
+        </div>
+    </div>
+</div>
+    </header>
+
+<main id="main" class="subpage has_hero_header" tabindex="-1">
+        <div class="container">
+        <div class="column_container">
+            <div class="content_column">
+                
+                    <div class="section heading_only">
+                        <div class="container">
+                    
+                        <div class="h1">Campus Maps</div>
+                        
+                        </div>
+                    </div>
+                    <div class="maps_search_controls">
+    <form id="maps_filter_form" method="get" action="https://www.abdn.ac.uk/about/campus/maps/buildings-by-type/">
+        <fieldset>
+            <legend>Looking For...</legend>
+            <label for="t" class="offscreen">Building Category</label>
+            <select id="t" name="t">
+                <option value=""> - Please select - </option>
+                
+                    <option value="1">Academic Buildings</option>
+                    
+                    <option value="2">Accommodation</option>
+                    
+                    <option value="3">Food and Drink</option>
+                    
+                    <option value="4">Libraries and Museums</option>
+                    
+                    <option value="5">Places of Worship</option>
+                    
+                    <option value="6">Sports Facilities</option>
+                                </select>
+            <input type="submit" id="maps_filter_go" value="Browse">
+        </fieldset>
+    </form>
+    <form id="maps_search_form" method="get" action="https://www.abdn.ac.uk/about/campus/maps/search/">
+        <fieldset>
+            <legend>Search Maps</legend>
+            <label for="maps_search_text" class="offscreen">Keywords</label>
+            <input type="text" id="maps_search_text" name="maps_search_text" maxlength="50">
+            <button type="submit" id="maps_search_go">Search</button>
+        </fieldset>
+    </form>
+</div>
+<div id="map_container"></div>
+<script>
+    document.getElementById('map_container').className = "map_container";
+    initialize();
+</script>
+<noscript>
+    <div class="advisory">
+        <p>Our maps come from Google and rely on JavaScript being active.
+                            <br>
+                If JavaScript is not available to you, we additionally offer several <a href="download.html">maps for download</a>.
+                    </p>
+    </div>
+</noscript>
+            </div>
+            <div class="subsection_column">
+                
+<div id="section_nav_wrapper" class="section">
+    <div id="section_nav" class="container">
+
+    <nav id="primary_nav" role="navigation" aria-label="Section Menu">
+        <h2 id="primary_nav_breadcrumb" class="offscreen">Breadcrumb</h2>
+    
+        <ul aria-labelledby="primary_nav_breadcrumb">
+        
+            <li><a href="../../../index.html">University Home</a></li>
+            
+            <li><a href="../../index-2.html">About</a></li>
+            
+            <li><a href="../index-2.html">Campus</a></li>
+            
+            <li><a href="index-2.html" class="current" aria-current="page">Campus Maps</a></li>
+            
+        </ul>
+        
+        <h2 class="offscreen">In This Section</h2>
+        <ul class="open" aria-label="In This Section">
+        
+                <li><a href="travelling-to-aberdeen.html">Travelling to Aberdeen</a></li>
+                
+                <li><a href="download.html">Maps for Download</a></li>
+                
+                <li><a href="buildings-atoz.html">Buildings A to Z</a></li>
+                
+                <li><a href="whereami.html">Where am I?</a></li>
+                
+        </ul>
+        
+    </nav>
+    <nav class="global_nav clearfix" role="navigation" aria-label="Quick Links">
+    <h2>Quick Links</h2>
+    <div id="link_wrapper" class="clearfix">
+        <div class="quick_links_col">
+            <h3>Our Website</h3>
+            <ul aria-label="Our Website">
+                <li><a href="../../../study/index.html">Study</a></li>
+                <li><a href="../../index.html">About</a></li>
+                <li><a href="../../../research/index.html">Research</a></li>
+                <li><a href="../../../alumni/index.html">Alumni &amp; Giving</a></li>
+                <li><a href="../../../business-info/index.html">Business</a></li>
+                <li><a href="../../../news/index.html">News</a></li>
+                <li><a href="../../../events/index.html">Events</a></li>
+            </ul>
+        </div>
+        <div class="quick_links_col">
+            <h3>Popular</h3>
+            <ul aria-label="Popular Pages">
+                <li><a href="../../../students/index.html">For Students</a></li>
+                <li><a href="../../../staffnet/index.html">For Staff</a></li>
+                <li><a href="https://www.store.abdn.ac.uk/">Online Store</a></li>
+                <li><a href="../../../jobs/index.html">Jobs</a></li>
+                <li><a href="../../../library/index.html">Library</a></li>
+                <li><a href="../../../people/index.html">Staff Directory</a></li>
+                <li><a href="../../../it/index.html">IT Services</a></li>
+                <li><a href="../../our-website/atoz.html">A to Z</a></li>
+                <li><a href="index.html">Campus Maps</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    </div>
+</div>
+            </div>
+        </div>
+    </div>
+    </main>
+<footer>
+    <div class="container">
+        <div class="footer_wrapper">
+            <div class="right_column">
+                <ul class="footer_utility_links">
+                    <li><a href="../../../students/index.html">For Students</a></li>
+                    <li><a href="../../../staffnet/index.html">For Staff</a></li>
+                    
+                        <li><a href="../../sitemap.html">Sitemap</a></li>
+                                        </ul>
+                                <div class="global_social">
+                    <h2>Connect With Us</h2>
+                    <ul>
+                        <li>
+                            <a href="https://www.youtube.com/user/uniofaberdeen" class="fab fa-youtube" title="YouTube" target="_blank" rel="noopener noreferrer">
+                                <i class="offscreen">YouTube</i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://twitter.com/aberdeenuni/" class="fab fa-twitter" title="Twitter" target="_blank" rel="noopener noreferrer">
+                                <i class="offscreen">Twitter</i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.facebook.com/universityofaberdeen/" class="fab fa-facebook-square" title="Facebook" target="_blank" rel="noopener noreferrer">
+                                <i class="offscreen">Facebook</i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://pinterest.com/aberdeenuni/" class="fab fa-pinterest" title="Pinterest" target="_blank" rel="noopener noreferrer">
+                                <i class="offscreen">Pinterest</i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.instagram.com/uniofaberdeen/" class="fab fa-instagram" title="Instagram" target="_blank" rel="noopener noreferrer">
+                                <i class="offscreen">Instagram</i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.linkedin.com/school/13849" class="fab fa-linkedin" title="LinkedIn" target="_blank" rel="noopener noreferrer">
+                                <i class="offscreen">LinkedIn</i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.weibo.com/abdn" class="fab fa-weibo" title="Weibo" target="_blank" rel="noopener noreferrer">
+                                <i class="offscreen">Weibo</i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="left_column">
+                <div class="global_contact" itemscope itemtype="https://schema.org/CollegeOrUniversity">
+                    <h2 class="offscreen">Contact Us</h2>
+                    <a href="../../../index.html" class="uni_logo_footer">
+                        <img src="../../../global/images/layout/UoA_Landscape_Logo_RGB_REVERSE_2018435c.png?cb=20221026" srcset="/global/images/layout/UoA_Landscape_Logo_CMYK_REVERSE_2018.svg?cb=20221026" alt="University of Aberdeen">
+                    </a>
+                    <dl>
+                        <dt>Address</dt>
+                        <dd class="address" itemscope itemtype="https://schema.org/PostalAddress">
+                            <span itemprop="name">University of Aberdeen</span><br>
+                            <span itemprop="streetAddress">King's College</span>,<br>
+                            <span itemprop="addressLocality">Aberdeen</span>,<br>
+                            <span itemprop="postalCode">AB24 3FX</span>
+                        </dd>
+                        <dt>Phone</dt>
+                        <dd itemprop="telephone" class="phone">
+                            Tel: <a href="tel:+441224272000">+44 (0)1224 272000</a>
+                        </dd>
+                    </dl>
+                    <div class="where_are_we utility">
+                        <ul>
+                            <li><a href="../../contact/index.html">Contacts</a></li>
+                            <li><a href="../../our-website/atoz.html">A to Z</a></li>
+                            <li><a href="index.html">Maps and Directions</a></li>
+                            <li><a href="../../../people/index.html">Staff Directory</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="top_of_page_align">
+            <a href="#top" class="top_of_page">Top of Page</a>
+        </div>
+    </div>
+    <div class="dark">
+        <div class="container">
+            <div class="legals utility">
+                <ul>
+                    <li><a href="../../our-website/privacy.html">Privacy Statement</a></li>
+                    <li><a href="../../our-website/accessibility.html">Accessibility</a></li>
+                    <li><a href="../../our-website/cookies.html">Cookies</a></li>
+                    <li><a href="../../../slavery-statement/index.html">Slavery &amp; Human Trafficking Statement</a></li>
+                    <li><a href="../../../staffnet/governance/freedom-of-information-2542187.html?utm_source=website-address&amp;utm_medium=web-link&amp;utm_campaign=FOI">Freedom of Information</a></li>
+                </ul>
+            </div>
+            <div class="charity">
+                <p>The University of Aberdeen is a charity registered in Scotland, No.SC013683</p>
+            </div>
+        </div>
+    </div>
+</footer>
+<script src="../../../global/js/opentext_responsive/navigation435c.js?cb=20221026"></script>
+<script src="../../../../uoab-search.squiz.cloud/s/resources-global/js/typeahead.bundle-0.11.1.min.js"></script>
+<script src="../../../../uoab-search.squiz.cloud/s/resources-global/js/funnelback.autocompletion-2.6.0.js"></script>
+<script src="../../../global/js/opentext_responsive/funnelback_search435c.js?cb=20221026"></script>
+<script>
+    $(document).ready(function() {
+        $('iframe[src*="kaltura.com"], iframe[src*="youtube.com"], iframe[src*="vimeo.com"], iframe[src*="prezi.com"], iframe[src*="panopto.eu"], div[class="kWidgetIframeContainer"]').each(function() {
+            var $this = $(this);
+
+            // remove any inline style
+            $this.removeAttr('style');
+
+            if ($this.hasClass('kWidgetIframeContainer')) {
+                // remove Kaltura class
+                $this.removeClass('kWidgetIframeContainer');
+
+                // add responsive container class
+                $this.addClass('video_container');
+                return;
+            }
+
+            // get the video source
+            var src = $this.attr('src');
+
+            // ensure https;
+            if (src.indexOf('index.html') > -1) {
+                src = src.replace('index.html', 'index.html');
+            }
+
+            // ensure correct kaltura domain being used
+            if (src.indexOf('cdnapi.kaltura') > -1) {
+                src = src.replace('cdnapi.kaltura', 'cdnapisec.kaltura');
+            }
+
+            // if it's a playlist
+            if ($this.attr('src').match(/playlistAPI/)) {
+                $this.css('width', '100%');
+                return;
+            }
+
+            // add a wrapper
+            if (!$this.parent().hasClass('video_container') && !$this.parent().parent().hasClass('homepage_video_container')) {
+                $this.wrap('<div class="video_container"></div>');
+            };
+
+            // force Youtube to show related videos from the channel the original video came from
+            if (src.indexOf('youtube') > -1) {
+                if (src.indexOf('rel=') > -1) {
+                    src = src.replace(/rel=[1-9]/, 'rel=0');
+                }
+                else {
+                    if (src.indexOf('?') === -1) {
+                        src += '?';
+                    }
+                    else {
+                        src += '&';
+                    }
+
+                    src += 'rel=0';
+                }
+            }
+
+            $this.attr('src', src);
+        });
+
+        $('table').each(function() {
+            // add a wrapper
+            $(this).wrap('<div class="responsive_table"></div>');
+            $(this).css('table-layout', 'auto');
+            $(this).css('width', '100%');
+        });
+
+        $('#uni_menu > ul > li > a').each(function() {
+            var the_prefix = $(this).html().toLowerCase().replace(/(\&amp;)/g, '').replace(/\s/g, '');
+
+            $(this).parent().find('a').addClass('uni_menu_' + the_prefix);
+        });
+
+        // check all links in content for URLs as text and wrap them
+        var url_regex = /((https?|ftp|rtmp):\/\/)?(www\.)?([-a-z0-9_]+\.)+([a-z]){2,4}/i;
+
+        $('main').find('a').each(function() {
+            var has_url = url_regex.test($(this).text());
+
+            if (has_url) {
+                $(this).addClass('wrap_url');
+            }
+        });
+
+        // ensafen target _blank
+        $('main').find('a[target="_blank"]').each(function() {
+            $(this).attr('rel', 'noopener noreferrer');
+        });
+
+});
+    //  This extends jQuery selector to find any element that can gain focus
+    jQuery.extend(jQuery.expr[':'], {
+        focusable: function(el, index, selector) {
+            return $(el).is('button, [href], input, select, textarea, [role="button"], [tabindex]:not([tabindex="-1"])');
+        }
+    });
+</script>
+
+                <script src="../../../../cc.cdn.civiccomputing.com/9/cookieControl-9.x.min.js"></script>
+                
+                <script src="../../../global/cookies/js/cookie-consent435c.js?cb=20221026"></script>
+                    </body>
+
+<!-- Mirrored from www.abdn.ac.uk/about/campus/maps/ by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 27 Oct 2022 12:45:53 GMT -->
+</html>

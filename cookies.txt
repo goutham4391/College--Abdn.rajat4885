@@ -1,0 +1,29 @@
+# HTTrack Website Copier Cookie File
+# This file format is compatible with Netscape cookies
+abdn.ac.uk	TRUE	/studenthub	FALSE	1999999999	aperture_csrf_cookie	903e33467a5845eb6b9784d1bd5809ea
+abdn.ac.uk	TRUE	/studenthub	FALSE	1999999999	Student-HubSession	571a9e2c8540f086d5b2d2eb00540ea94052d425
+www.abdn.ac.uk	TRUE	/	FALSE	1999999999	abdn_web_0ec509f03c7447eb7db95ab9a8d9dca3	3vhr4k1od79lk4l4p4s6hfasu7
+www.abdn.ac.uk	TRUE	/	FALSE	1999999999	abdn_web_ed1d4ff6b7a522147cacafea6d50d83f	bmt28k6udpbmpvt5jmau10c3v7
+www.abdn.ac.uk	TRUE	/	FALSE	1999999999	abdn_web_d4cbb9b0e52cdd31a6a2d47ded1fb21a	e94o7vvrh4koeh7jk7qkgoca23
+www.abdn.ac.uk	TRUE	/	FALSE	1999999999	abdn_web_18281abddfee0db66cd2f644ab0c46ab	p0roo4p2chqlpjrpvmal9fgvs7
+www.abdn.ac.uk	TRUE	/	FALSE	1999999999	abdn_web_1054efbcffe240db720756820afd091a	uctt0iu1b9p2p2ovl665lljq35
+www.abdn.ac.uk	TRUE	/	FALSE	1999999999	abdn_web_a9f3560f4dd1c6791efb9938e2ed1244	6migccttc3ipa8opjpuf1vuge2
+www.abdn.ac.uk	TRUE	/	FALSE	1999999999	abdn_web_e1d3c19ecbea0247580fc90bfb8d32be	82409g6jbq781richboq02hh74
+www.abdn.ac.uk	TRUE	/	FALSE	1999999999	abdn_web_5111a31d039fc45e3e76d19a2a7e1e29	o8ljjsbl32vq40aiv4n6l6ic05
+www.abdn.ac.uk	TRUE	/	FALSE	1999999999	abdn_web_aae4e085b5a7f0ebce834887723c1d1b	99o3qjoqtj31ngeg7nqb4bokk1
+www.abdn.ac.uk	TRUE	/	FALSE	1999999999	XSRF-TOKEN	eyJpdiI6InFRcWlqRVQxcHgxcXFpdTFCUm9MOEE9PSIsInZhbHVlIjoiaktQRWJQMFhhTUNiMUFwdjZ1TytuVXZ5VmF1R29naXFEbW1ydWFXZTg2TExtbTNQb2xWa0F0clJUVTlTZjJnVG1wMXZMNWNpM0ZEUnV5MVpXSDFrMWc9PSIsIm1hYyI6IjgzNDAwZDkxYjExYmQ5ODkxYzVmNjY4ZWZhNGZmOWFkZGViZDY2NTdjNzhjZjZiMzA4MGRhMTVlMDAzY2JkYTAifQ%3D%3D
+www.abdn.ac.uk	TRUE	/	FALSE	1999999999	epayments_session	eyJpdiI6IlFwajJwNzZoRnEyNzl5K2xRbkljNkE9PSIsInZhbHVlIjoiRVJ1SkRRVmJ2dEpoWllGNDh3dFV6MG92amN1Wmdnc2J6OWI2MlwvNk5QRHZWN2ZtRWhVeDg5dGIrY1p4NDZFaHFGbjFENDg0b0I1aG9rd1NuWEdOdGVnPT0iLCJtYWMiOiI0NDBiN2EzZmFhM2UyMjdmYzJhNTljMmJiYzFmYjdjMWQ2YWQ0OWY0NDk0MjRhMjU4N2M3YWIwZmI4ZWUzZWZlIn0%3D
+www.abdn.ac.uk	TRUE	/	FALSE	1999999999	abdn_web_ad5de6ced37a6535f0bb2be8b0cc274b	e2j0ic7nijiiajo1dlummlddd6
+www.abdn.ac.uk	TRUE	/	FALSE	1999999999	abdn_web_c232a43013f363d5aa9616489738f88c	23hdohchldk33eku0m63bfa441
+www.abdn.ac.uk	TRUE	/	FALSE	1999999999	abdn_web_c632417989b65e6873c1aff28780d3a7	mvt3r1bj06mof2rhhu78almpr6
+www.abdn.ac.uk	TRUE	/	FALSE	1999999999	abdn_web_f6c98d912218232047d3f9f6ae0b1509	1ilakiq6fucih68u07l2rqnfo1
+www.abdn.ac.uk	TRUE	/	FALSE	1999999999	abdn_web_77d5268167d6a536e47b3dae468ed755	dh3bbedokabatgn217m2pf8s27
+www.abdn.ac.uk	TRUE	/	FALSE	1999999999	eAccommodation	deleted
+www.abdn.ac.uk	TRUE	/	FALSE	1999999999	abdn_agents_portal_session	eyJpdiI6InJxcis4bG1lYVwvU29kRjUwQVQ5WWlRPT0iLCJ2YWx1ZSI6ImxSQ3lXZ3FJd25YN2hJXC9LdHUrZGdlYnIrSStCS0hYRTJpR2ZWTHBBS0xERzdFQ3oydm1NVHI3M3ZDbTBNZ2ZuTFhhaCtpUE5Henc5UnM1ZytKd2E4UT09IiwibWFjIjoiYjkyMWE5MzNjNTA3NDdjN2MxNzM5NmJlYTQxN2JmYzgzODk3Njg2MDNkNjQ1YTRjNTFhMGYxNmI4ZDA4Yzk2ZCJ9
+www.abdn.ac.uk	TRUE	/	FALSE	1999999999	abdn_web_2855a609314cf2f1c8aeb44f18134ff1	in3anvd2h0esvaio9f4jeh2o50
+www.abdn.ac.uk	TRUE	/	FALSE	1999999999	ci3_sessions	j46unc8a15sgippp1jjqk8atv3a7s80e
+www.abdn.ac.uk	TRUE	/	FALSE	1999999999	abdn_web_b36b1682d4042928c338c4d5a734ecb6	mggdpfavkvmlc933fjk58g9sd4
+www.abdn.ac.uk	TRUE	/	FALSE	1999999999	PHPSESSID	kke0l62qmljqat233d126j2dmjlb1pmm
+www.abdn.ac.uk	TRUE	/	FALSE	1999999999	abdn_web_e4d9e26c91044240593e239a210b4516	n0m0kphlmhf9s7lb95h6tp82c6
+www.abdn.ac.uk	TRUE	/	FALSE	1999999999	UoAInfrastructure	386958731.47873.0000
+
